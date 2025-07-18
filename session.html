@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="session.css" />
+    <title>Session Calculator</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div>
+          <h1 id="current-date-display">July 1st</h1>
+          <p>Session Calculator</p>
+        </div>
+      </div>
+
+      <div class="date-nav">
+        <span class="date-label">Date</span>
+        <div class="nav-buttons">
+          <button id="prev-day-btn">&lt;</button>
+          <button id="next-day-btn">&gt;</button>
+        </div>
+      </div>
+
+      <div class="calendar-row" id="calendar-row">
+        <!-- Calendar days will be inserted here by JS -->
+      </div>
+
+      <div class="sessions-section">
+        <div class="sessions-header">
+          <h2>Today</h2>
+          <span class="session-count" id="session-count">5 sessions</span>
+        </div>
+        <div class="session-items" id="session-items">
+          <!-- Session circles will be inserted here by JS -->
+        </div>
+        <div class="progress-container">
+          <div class="progress-circle">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="circle-bg" cx="40" cy="40" r="36"></circle>
+              <circle
+                class="circle-progress"
+                cx="40"
+                cy="40"
+                r="36"
+                id="progress-circle-path"
+              ></circle>
+            </svg>
+          </div>
+          <span class="progress-percentage" id="progress-percentage">60%</span>
+        </div>
+        <button class="add-session-button" id="add-session-btn">
+          Add session
+        </button>
+      </div>
+    </div>
+    <script src="session.js"></script>
+  </body>
+</html>
