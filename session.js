@@ -1,192 +1,260 @@
-const currentDateDisplay = document.getElementById("current-date-display");
-const prevDayBtn = document.getElementById("prev-day-btn");
-const nextDayBtn = document.getElementById("next-day-btn");
-const calendarRow = document.getElementById("calendar-row");
-const sessionItemsContainer = document.getElementById("session-items");
-const sessionCountDisplay = document.getElementById("session-count");
-const progressCirclePath = document.getElementById("progress-circle-path");
-const progressPercentageDisplay = document.getElementById(
-  "progress-percentage"
-);
-const addSessionBtn = document.getElementById("add-session-btn");
+// State management
+let selectedDate = 15;
+let currentWeekStart = 12; // Starting day of the current week
+let currentMonth = 12; // December
+let currentYear = 2024;
+let sessions = [
+  { id: 1, status: "completed" },
+  { id: 2, status: "completed" },
+  { id: 3, status: "incomplete" },
+  { id: 4, status: "failed" },
+  { id: 5, status: "incomplete" },
+];
 
-let currentDate = new Date(); // Initialize with current date
-let sessions = []; // Array to hold session data
+// Initialize the app
+document.addEventListener("DOMContentLoaded", () => {
+  renderCalendar();
+  renderSessions();
+  updateProgress();
+  updateDateHeader();
 
-const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 36; // 2 * PI * radius
+  // Event listeners
+  document
+    .getElementById("add-session-btn")
+    .addEventListener("click", addSession);
+  document
+    .getElementById("prev-btn")
+    .addEventListener("click", goToPreviousWeek);
+  document.getElementById("next-btn").addEventListener("click", goToNextWeek);
+});
 
-// Helper to get ordinal suffix for dates
-function getOrdinalSuffix(day) {
-  if (day > 3 && day < 21) return "th";
-  switch (day % 10) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
-      return "th";
-  }
-}
+function renderCalendar() {
+  const calendarDates = document.getElementById("calendar-dates");
+  const dates = generateWeekDates();
 
-// Function to format date for display
-function formatDate(date) {
-  const options = { month: "long", day: "numeric" };
-  const formatted = date.toLocaleDateString("en-US", options);
-  const day = date.getDate();
-  return `${formatted}${getOrdinalSuffix(day)}`;
-}
+  calendarDates.innerHTML = "";
 
-// Render calendar row
-function renderCalendarRow() {
-  calendarRow.innerHTML = "";
-  const startOfWeek = new Date(currentDate);
-  startOfWeek.setDate(
-    currentDate.getDate() -
-      currentDate.getDay() +
-      (currentDate.getDay() === 0 ? -6 : 1)
-  ); // Adjust to Monday start
+  dates.forEach((dateObj) => {
+    const dateElement = document.createElement("div");
+    dateElement.className = "calendar-date";
+    dateElement.textContent = dateObj.day;
 
-  const daysOfWeek = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
-  for (let i = 0; i < 7; i++) {
-    const day = new Date(startOfWeek);
-    day.setDate(startOfWeek.getDate() + i);
-
-    const dayDiv = document.createElement("div");
-    dayDiv.className = "calendar-day";
-    dayDiv.textContent = daysOfWeek[i];
-    calendarRow.appendChild(dayDiv);
-  }
-
-  for (let i = 0; i < 7; i++) {
-    const date = new Date(startOfWeek);
-    date.setDate(startOfWeek.getDate() + i);
-
-    const dateDiv = document.createElement("div");
-    dateDiv.className = "calendar-date";
-    dateDiv.textContent = date.getDate();
-    dateDiv.dataset.date = date.toISOString().split("T")[0]; // Store date string
-
-    if (date.toDateString() === currentDate.toDateString()) {
-      dateDiv.classList.add("selected");
+    if (
+      dateObj.day === selectedDate &&
+      dateObj.month === currentMonth &&
+      dateObj.year === currentYear
+    ) {
+      dateElement.classList.add("selected");
     }
 
-    dateDiv.addEventListener("click", () => {
-      currentDate = date;
-      updateUI();
+    // Add different styling for dates from different months
+    if (dateObj.month !== currentMonth) {
+      dateElement.style.color = "#d1d5db";
+    }
+
+    dateElement.addEventListener("click", () => {
+      selectedDate = dateObj.day;
+      currentMonth = dateObj.month;
+      currentYear = dateObj.year;
+      renderCalendar();
+      updateDateHeader();
     });
-    calendarRow.appendChild(dateDiv);
-  }
+
+    calendarDates.appendChild(dateElement);
+  });
 }
 
-// Render sessions
-function renderSessions() {
-  sessionItemsContainer.innerHTML = "";
-  sessions.forEach((session, index) => {
-    const sessionDiv = document.createElement("div");
-    sessionDiv.className = `session-item ${session.status}`;
-    sessionDiv.dataset.id = session.id;
+function generateWeekDates() {
+  const dates = [];
+  const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+  const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+  const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+  const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+  const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
+  const daysInPrevMonth = getDaysInMonth(prevMonth, prevYear);
 
-    const statusIcon = document.createElement("span");
-    statusIcon.className = "status-icon";
-    if (session.status === "completed") {
-      statusIcon.textContent = "✓";
-    } else if (session.status === "failed") {
-      statusIcon.textContent = "×";
+  for (let i = 0; i < 7; i++) {
+    const dayNumber = currentWeekStart + i;
+
+    if (dayNumber <= 0) {
+      // Previous month
+      dates.push({
+        day: daysInPrevMonth + dayNumber,
+        month: prevMonth,
+        year: prevYear,
+      });
+    } else if (dayNumber > daysInMonth) {
+      // Next month
+      dates.push({
+        day: dayNumber - daysInMonth,
+        month: nextMonth,
+        year: nextYear,
+      });
+    } else {
+      // Current month
+      dates.push({
+        day: dayNumber,
+        month: currentMonth,
+        year: currentYear,
+      });
     }
-    sessionDiv.appendChild(statusIcon);
+  }
 
-    if (session.status === "failed") {
+  return dates;
+}
+
+function getDaysInMonth(month, year) {
+  return new Date(year, month, 0).getDate();
+}
+
+function goToPreviousWeek() {
+  currentWeekStart -= 7;
+
+  // Check if we need to go to previous month
+  if (currentWeekStart <= 0) {
+    const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+    const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
+    const daysInPrevMonth = getDaysInMonth(prevMonth, prevYear);
+
+    currentWeekStart += daysInPrevMonth;
+    currentMonth = prevMonth;
+    currentYear = prevYear;
+  }
+
+  renderCalendar();
+  updateDateHeader();
+}
+
+function goToNextWeek() {
+  const daysInCurrentMonth = getDaysInMonth(currentMonth, currentYear);
+  currentWeekStart += 7;
+
+  // Check if we need to go to next month
+  if (currentWeekStart > daysInCurrentMonth) {
+    currentWeekStart -= daysInCurrentMonth;
+    currentMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+    currentYear = currentMonth === 1 ? currentYear + 1 : currentYear;
+  }
+
+  renderCalendar();
+  updateDateHeader();
+}
+
+function updateDateHeader() {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const dateNav = document.querySelector(".date-nav h2");
+  dateNav.textContent = `${monthNames[currentMonth - 1]} ${currentYear}`;
+}
+
+function renderSessions() {
+  const sessionItems = document.getElementById("session-items");
+  const sessionCount = document.getElementById("session-count");
+
+  sessionItems.innerHTML = "";
+  sessionCount.textContent = `${sessions.length} total`;
+
+  sessions.forEach((session) => {
+    const sessionElement = document.createElement("div");
+    sessionElement.className = `session-item ${session.status}`;
+
+    const numberSpan = document.createElement("span");
+    numberSpan.textContent = session.id;
+    sessionElement.appendChild(numberSpan);
+
+    // Add status icon
+    if (session.status === "completed") {
+      const statusIcon = document.createElement("span");
+      statusIcon.className = "status-icon";
+      statusIcon.textContent = "✓";
+      sessionElement.appendChild(statusIcon);
+    } else if (session.status === "failed") {
+      const statusIcon = document.createElement("span");
+      statusIcon.className = "status-icon";
+      statusIcon.textContent = "×";
+      sessionElement.appendChild(statusIcon);
+
+      // Add remove icon
       const removeIcon = document.createElement("div");
       removeIcon.className = "remove-icon";
       removeIcon.textContent = "×";
       removeIcon.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent toggling status when removing
+        e.stopPropagation();
         removeSession(session.id);
       });
-      sessionDiv.appendChild(removeIcon);
+      sessionElement.appendChild(removeIcon);
     }
 
-    sessionDiv.addEventListener("click", () => toggleSessionStatus(session.id));
-    sessionItemsContainer.appendChild(sessionDiv);
+    sessionElement.addEventListener("click", () => {
+      toggleSessionStatus(session.id);
+    });
+
+    sessionItems.appendChild(sessionElement);
   });
-  sessionCountDisplay.textContent = `${sessions.length} sessions`;
-  updateProgressBar();
 }
 
-// Update progress bar
-function updateProgressBar() {
-  const completed = sessions.filter((s) => s.status === "completed").length;
-  const percentage =
-    sessions.length === 0 ? 0 : Math.round((completed / sessions.length) * 100);
-  const offset =
-    CIRCLE_CIRCUMFERENCE - (percentage / 100) * CIRCLE_CIRCUMFERENCE;
-
-  progressCirclePath.style.strokeDasharray = CIRCLE_CIRCUMFERENCE;
-  progressCirclePath.style.strokeDashoffset = offset;
-  progressPercentageDisplay.textContent = `${percentage}%`;
-}
-
-// Session actions
 function toggleSessionStatus(id) {
-  sessions = sessions.map((session) => {
-    if (session.id === id) {
-      if (session.status === "incomplete") {
-        return { ...session, status: "completed" };
-      } else if (session.status === "completed") {
-        return { ...session, status: "failed" };
-      } else {
-        // failed
-        return { ...session, status: "incomplete" };
-      }
+  const session = sessions.find((s) => s.id === id);
+  if (session) {
+    if (session.status === "incomplete") {
+      session.status = "completed";
+    } else if (session.status === "completed") {
+      session.status = "failed";
+    } else if (session.status === "failed") {
+      session.status = "incomplete";
     }
-    return session;
-  });
-  renderSessions();
-}
-
-function addSession() {
-  const newId =
-    sessions.length > 0 ? Math.max(...sessions.map((s) => s.id)) + 1 : 1;
-  sessions.push({ id: newId, status: "incomplete" });
-  renderSessions();
+    renderSessions();
+    updateProgress();
+  }
 }
 
 function removeSession(id) {
-  sessions = sessions.filter((session) => session.id !== id);
+  sessions = sessions.filter((s) => s.id !== id);
   renderSessions();
+  updateProgress();
 }
 
-// Update all UI elements
-function updateUI() {
-  currentDateDisplay.textContent = formatDate(currentDate);
-  renderCalendarRow();
-  // For simplicity, sessions are reset for each day. In a real app, you'd load sessions for the selected date.
-  // For this demo, we'll just re-initialize with a default set.
-  sessions = [
-    { id: 1, status: "completed" },
-    { id: 2, status: "completed" },
-    { id: 3, status: "failed" },
-    { id: 4, status: "completed" },
-    { id: 5, status: "failed" },
-  ];
+function addSession() {
+  const newId = Math.max(...sessions.map((s) => s.id), 0) + 1;
+  sessions.push({ id: newId, status: "incomplete" });
   renderSessions();
+  updateProgress();
 }
 
-// Event Listeners
-prevDayBtn.addEventListener("click", () => {
-  currentDate.setDate(currentDate.getDate() - 1);
-  updateUI();
-});
+function updateProgress() {
+  const completedSessions = sessions.filter(
+    (s) => s.status === "completed"
+  ).length;
+  const totalSessions = sessions.length;
+  const progressPercentage =
+    totalSessions > 0
+      ? Math.round((completedSessions / totalSessions) * 100)
+      : 0;
 
-nextDayBtn.addEventListener("click", () => {
-  currentDate.setDate(currentDate.getDate() + 1);
-  updateUI();
-});
+  // Update percentage display
+  document.getElementById(
+    "progress-percentage"
+  ).textContent = `${progressPercentage}%`;
 
-addSessionBtn.addEventListener("click", addSession);
+  // Update progress circle
+  const progressBar = document.getElementById("progress-bar");
+  const circumference = 2 * Math.PI * 28;
+  const strokeDashoffset =
+    circumference - (progressPercentage / 100) * circumference;
 
-// Initial render
-updateUI();
+  progressBar.style.strokeDasharray = circumference;
+  progressBar.style.strokeDashoffset = strokeDashoffset;
+}

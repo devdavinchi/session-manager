@@ -1,178 +1,188 @@
 * {
   caret-color: transparent;
 }
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
     Arial, sans-serif;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   margin: 0;
-  padding: 20px;
+  padding: 32px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  color: #333;
+  color: #111827;
 }
 
 .container {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  padding: 30px;
   width: 100%;
-  max-width: 600px;
-  box-sizing: border-box;
+  max-width: 672px;
 }
 
+.content {
+  width: 100%;
+}
+
+/* Header */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 48px;
 }
 
 .header h1 {
-  font-size: 2.2em;
-  margin: 0;
-  font-weight: 700;
+  font-size: 1.875rem;
+  font-weight: 300;
+  color: #111827;
+  margin: 0 0 8px 0;
 }
 
 .header p {
-  font-size: 1.1em;
+  color: #6b7280;
+  font-weight: 300;
   margin: 0;
-  color: #666;
 }
 
+/* Date Navigation */
 .date-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 32px;
 }
 
-.date-nav .date-label {
-  font-weight: 600;
-  font-size: 1.1em;
+.date-nav h2 {
+  font-size: 1.25rem;
+  font-weight: 300;
+  color: #111827;
+  margin: 0;
 }
 
-.date-nav .nav-buttons button {
+.nav-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-buttons button {
   background: none;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px 12px;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.125rem;
   cursor: pointer;
-  font-size: 1em;
-  margin-left: 5px;
-  color: #333;
+  transition: color 0.2s;
 }
 
-.date-nav .nav-buttons button:hover {
-  background-color: #f0f0f0;
+.nav-buttons button:hover {
+  color: #4b5563;
 }
 
-.calendar-row {
+/* Calendar */
+.calendar {
+  margin-bottom: 48px;
+}
+
+.calendar-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-  margin-bottom: 30px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.calendar-day {
+.day-label {
   text-align: center;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  font-weight: 300;
   padding: 8px 0;
-  font-size: 0.9em;
-  color: #666;
+}
+
+.calendar-dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
 }
 
 .calendar-date {
   text-align: center;
-  padding: 8px 0;
-  font-size: 1em;
-  font-weight: 500;
-  border-radius: 4px;
+  padding: 12px 0;
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: all 0.2s;
+  border-radius: 50%;
+  color: #4b5563;
+}
+
+.calendar-date:hover {
+  background-color: #f3f4f6;
 }
 
 .calendar-date.selected {
-  background-color: #000;
-  color: #fff;
-  font-weight: 700;
+  background-color: #111827;
+  color: #ffffff;
 }
 
-.calendar-date:not(.selected):hover {
-  background-color: #f0f0f0;
-}
-
-.sessions-section {
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 30px;
+/* Sessions */
+.sessions {
+  margin-bottom: 32px;
 }
 
 .sessions-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
-.sessions-header h2 {
-  font-size: 1.4em;
+.sessions-header h3 {
+  font-size: 1.125rem;
+  font-weight: 300;
+  color: #111827;
   margin: 0;
-  font-weight: 600;
 }
 
-.sessions-header .session-count {
-  font-size: 1em;
-  font-weight: 500;
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+#session-count {
+  font-size: 0.875rem;
+  color: #6b7280;
 }
 
 .session-items {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
 }
 
 .session-item {
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  border: 2px solid #d1d5db;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5em;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+  transition: all 0.2s;
+  color: #9ca3af;
 }
 
 .session-item.completed {
-  border-color: #000;
-  background-color: #000;
-  color: #fff;
+  border-color: #111827;
+  background-color: #111827;
+  color: #ffffff;
 }
 
 .session-item.failed {
-  border-color: #f00;
-  background-color: #fdd;
-  color: #f00;
+  border-color: #f87171;
+  background-color: #fef2f2;
+  color: #f87171;
 }
 
 .session-item .status-icon {
-  font-size: 1em; /* smaller than before */
   position: absolute;
-  color: white;
+  font-size: 0.75rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -180,26 +190,26 @@ body {
 }
 
 .session-item.completed .status-icon {
-  content: "✓";
+  color: #ffffff;
 }
 
 .session-item.failed .status-icon {
-  content: "×";
+  color: #f87171;
 }
 
-.session-item .remove-icon {
+.remove-icon {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #f00;
-  color: #fff;
+  top: -4px;
+  right: -4px;
+  background-color: #f87171;
+  color: #ffffff;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.8em;
+  font-size: 0.75rem;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s;
@@ -209,57 +219,46 @@ body {
   opacity: 1;
 }
 
-.progress-container {
+.progress-section {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
 .progress-circle {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
 }
 
 .progress-circle svg {
   transform: rotate(-90deg);
 }
 
-.progress-circle .circle-bg {
-  stroke: #eee;
-  stroke-width: 8;
-  fill: none;
-}
-
-.progress-circle .circle-progress {
-  stroke: #000;
-  stroke-width: 8;
-  fill: none;
-  stroke-linecap: round;
+#progress-bar {
   transition: stroke-dashoffset 0.5s ease-in-out;
 }
 
 .progress-percentage {
-  font-size: 1.8em;
-  font-weight: 700;
-  color: #000;
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: #111827;
 }
 
-.add-session-button {
+#add-session-btn {
   background: none;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 10px 15px;
+  border: none;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 300;
+  border-bottom: 1px solid #e5e7eb;
   cursor: pointer;
-  font-size: 1em;
-  color: #333;
-  width: 100%;
-  text-align: center;
-  margin-top: 10px;
+  transition: all 0.2s;
+  padding-bottom: 4px;
 }
 
-.add-session-button:hover {
-  background-color: #f0f0f0;
+#add-session-btn:hover {
+  color: #374151;
+  border-bottom-color: #9ca3af;
 }
