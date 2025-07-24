@@ -3,82 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Session Tracker</title>
+    <title>Sessions</title>
     <link rel="stylesheet" href="session.css" />
+    nk
   </head>
   <body>
     <div class="container">
-      <div class="content">
-        <!-- Header -->
-        <div class="header">
-          <h1>Sessions</h1>
-          <p>Track your daily progress</p>
+      <!-- Header -->
+      <div class="header">
+        <h1>Sessions</h1>
+      </div>
+
+      <!-- Simple Date Display -->
+      <div class="date-display">
+        <h2 id="current-date">Today</h2>
+      </div>
+
+      <!-- Sessions Section -->
+      <div class="sessions">
+        <div class="session-items" id="session-items">
+          <!-- Session items will be populated by JavaScript -->
         </div>
 
-        <!-- Date Navigation -->
-        <div class="date-nav">
-          <h2>December 2024</h2>
-          <div class="nav-buttons">
-            <button id="prev-btn">←</button>
-            <button id="next-btn">→</button>
+        <div class="progress-section">
+          <div class="progress-circle">
+            <svg width="80" height="80">
+              <circle
+                cx="40"
+                cy="40"
+                r="32"
+                stroke="#f3f4f6"
+                stroke-width="4"
+                fill="none"
+              ></circle>
+              <circle
+                id="progress-bar"
+                cx="40"
+                cy="40"
+                r="32"
+                stroke="#111827"
+                stroke-width="4"
+                fill="none"
+                stroke-linecap="round"
+              ></circle>
+            </svg>
           </div>
+          <div class="progress-percentage" id="progress-percentage">0%</div>
+          <div class="session-count" id="session-count">0 sessions</div>
         </div>
 
-        <!-- Calendar -->
-        <div class="calendar">
-          <div class="calendar-days">
-            <div class="day-label">S</div>
-            <div class="day-label">M</div>
-            <div class="day-label">T</div>
-            <div class="day-label">W</div>
-            <div class="day-label">T</div>
-            <div class="day-label">F</div>
-            <div class="day-label">S</div>
-          </div>
-          <div class="calendar-dates" id="calendar-dates">
-            <!-- Dates will be populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Sessions Section -->
-        <div class="sessions">
-          <div class="sessions-header">
-            <h3>Today's Sessions</h3>
-            <span id="session-count">0 total</span>
-          </div>
-
-          <div class="session-items" id="session-items">
-            <!-- Session items will be populated by JavaScript -->
-          </div>
-
-          <div class="progress-section">
-            <div class="progress-circle">
-              <svg width="64" height="64">
-                <circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="#f3f4f6"
-                  stroke-width="4"
-                  fill="none"
-                ></circle>
-                <circle
-                  id="progress-bar"
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  stroke="#111827"
-                  stroke-width="4"
-                  fill="none"
-                  stroke-linecap="round"
-                ></circle>
-              </svg>
-            </div>
-            <div class="progress-percentage" id="progress-percentage">0%</div>
-          </div>
-
-          <button id="add-session-btn">+ Add Session</button>
-        </div>
+        <button id="add-session-btn">Add Session</button>
       </div>
     </div>
 

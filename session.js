@@ -1,8 +1,4 @@
 // State management
-let selectedDate = 15;
-let currentWeekStart = 12; // Starting day of the current week
-let currentMonth = 12; // December
-let currentYear = 2024;
 let sessions = [
   { id: 1, status: "completed" },
   { id: 2, status: "completed" },
@@ -13,151 +9,26 @@ let sessions = [
 
 // Initialize the app
 document.addEventListener("DOMContentLoaded", () => {
-  renderCalendar();
   renderSessions();
   updateProgress();
-  updateDateHeader();
+  updateDateDisplay();
 
   // Event listeners
   document
     .getElementById("add-session-btn")
     .addEventListener("click", addSession);
-  document
-    .getElementById("prev-btn")
-    .addEventListener("click", goToPreviousWeek);
-  document.getElementById("next-btn").addEventListener("click", goToNextWeek);
 });
 
-function renderCalendar() {
-  const calendarDates = document.getElementById("calendar-dates");
-  const dates = generateWeekDates();
-
-  calendarDates.innerHTML = "";
-
-  dates.forEach((dateObj) => {
-    const dateElement = document.createElement("div");
-    dateElement.className = "calendar-date";
-    dateElement.textContent = dateObj.day;
-
-    if (
-      dateObj.day === selectedDate &&
-      dateObj.month === currentMonth &&
-      dateObj.year === currentYear
-    ) {
-      dateElement.classList.add("selected");
-    }
-
-    // Add different styling for dates from different months
-    if (dateObj.month !== currentMonth) {
-      dateElement.style.color = "#d1d5db";
-    }
-
-    dateElement.addEventListener("click", () => {
-      selectedDate = dateObj.day;
-      currentMonth = dateObj.month;
-      currentYear = dateObj.year;
-      renderCalendar();
-      updateDateHeader();
-    });
-
-    calendarDates.appendChild(dateElement);
-  });
-}
-
-function generateWeekDates() {
-  const dates = [];
-  const daysInMonth = getDaysInMonth(currentMonth, currentYear);
-  const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
-  const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
-  const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
-  const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
-  const daysInPrevMonth = getDaysInMonth(prevMonth, prevYear);
-
-  for (let i = 0; i < 7; i++) {
-    const dayNumber = currentWeekStart + i;
-
-    if (dayNumber <= 0) {
-      // Previous month
-      dates.push({
-        day: daysInPrevMonth + dayNumber,
-        month: prevMonth,
-        year: prevYear,
-      });
-    } else if (dayNumber > daysInMonth) {
-      // Next month
-      dates.push({
-        day: dayNumber - daysInMonth,
-        month: nextMonth,
-        year: nextYear,
-      });
-    } else {
-      // Current month
-      dates.push({
-        day: dayNumber,
-        month: currentMonth,
-        year: currentYear,
-      });
-    }
-  }
-
-  return dates;
-}
-
-function getDaysInMonth(month, year) {
-  return new Date(year, month, 0).getDate();
-}
-
-function goToPreviousWeek() {
-  currentWeekStart -= 7;
-
-  // Check if we need to go to previous month
-  if (currentWeekStart <= 0) {
-    const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1;
-    const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear;
-    const daysInPrevMonth = getDaysInMonth(prevMonth, prevYear);
-
-    currentWeekStart += daysInPrevMonth;
-    currentMonth = prevMonth;
-    currentYear = prevYear;
-  }
-
-  renderCalendar();
-  updateDateHeader();
-}
-
-function goToNextWeek() {
-  const daysInCurrentMonth = getDaysInMonth(currentMonth, currentYear);
-  currentWeekStart += 7;
-
-  // Check if we need to go to next month
-  if (currentWeekStart > daysInCurrentMonth) {
-    currentWeekStart -= daysInCurrentMonth;
-    currentMonth = currentMonth === 12 ? 1 : currentMonth + 1;
-    currentYear = currentMonth === 1 ? currentYear + 1 : currentYear;
-  }
-
-  renderCalendar();
-  updateDateHeader();
-}
-
-function updateDateHeader() {
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const dateNav = document.querySelector(".date-nav h2");
-  dateNav.textContent = `${monthNames[currentMonth - 1]} ${currentYear}`;
+function updateDateDisplay() {
+  const today = new Date();
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  document.getElementById("current-date").textContent =
+    today.toLocaleDateString("en-US", options);
 }
 
 function renderSessions() {
@@ -165,18 +36,20 @@ function renderSessions() {
   const sessionCount = document.getElementById("session-count");
 
   sessionItems.innerHTML = "";
-  sessionCount.textContent = `${sessions.length} total`;
+  sessionCount.textContent = `${sessions.length} session${
+    sessions.length !== 1 ? "s" : ""
+  }`;
 
   sessions.forEach((session) => {
     const sessionElement = document.createElement("div");
     sessionElement.className = `session-item ${session.status}`;
 
-    const numberSpan = document.createElement("span");
-    numberSpan.textContent = session.id;
-    sessionElement.appendChild(numberSpan);
-
-    // Add status icon
-    if (session.status === "completed") {
+    // Show number for incomplete sessions, status icon for completed/failed
+    if (session.status === "incomplete") {
+      const numberSpan = document.createElement("span");
+      numberSpan.textContent = session.id;
+      sessionElement.appendChild(numberSpan);
+    } else if (session.status === "completed") {
       const statusIcon = document.createElement("span");
       statusIcon.className = "status-icon";
       statusIcon.textContent = "✓";
@@ -251,7 +124,7 @@ function updateProgress() {
 
   // Update progress circle
   const progressBar = document.getElementById("progress-bar");
-  const circumference = 2 * Math.PI * 28;
+  const circumference = 2 * Math.PI * 32;
   const strokeDashoffset =
     circumference - (progressPercentage / 100) * circumference;
 

@@ -7,165 +7,69 @@ body {
     Arial, sans-serif;
   background-color: #ffffff;
   margin: 0;
-  padding: 32px;
+  padding: 40px 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
   min-height: 100vh;
   color: #111827;
 }
 
 .container {
   width: 100%;
-  max-width: 672px;
+  max-width: 480px;
 }
 
-.content {
-  width: 100%;
-}
-
-/* Header */
 .header {
+  text-align: center;
   margin-bottom: 48px;
 }
 
 .header h1 {
-  font-size: 1.875rem;
-  font-weight: 300;
-  color: #111827;
-  margin: 0 0 8px 0;
-}
-
-.header p {
-  color: #6b7280;
-  font-weight: 300;
-  margin: 0;
-}
-
-/* Date Navigation */
-.date-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
-}
-
-.date-nav h2 {
-  font-size: 1.25rem;
+  font-size: 2rem;
   font-weight: 300;
   color: #111827;
   margin: 0;
 }
 
-.nav-buttons {
-  display: flex;
-  gap: 16px;
+.date-display {
+  text-align: center;
+  margin-bottom: 40px;
 }
 
-.nav-buttons button {
-  background: none;
-  border: none;
-  color: #9ca3af;
+.date-display h2 {
   font-size: 1.125rem;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.nav-buttons button:hover {
-  color: #4b5563;
-}
-
-/* Calendar */
-.calendar {
-  margin-bottom: 48px;
-}
-
-.calendar-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.day-label {
-  text-align: center;
-  font-size: 0.75rem;
-  color: #9ca3af;
   font-weight: 300;
-  padding: 8px 0;
+  color: #6b7280;
+  margin: 0;
 }
 
-.calendar-dates {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-}
-
-.calendar-date {
-  text-align: center;
-  padding: 12px 0;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  border-radius: 50%;
-  color: #4b5563;
-}
-
-.calendar-date:hover {
-  background-color: #f3f4f6;
-}
-
-.calendar-date.selected {
-  background-color: #111827;
-  color: #ffffff;
-}
-
-/* Sessions */
 .sessions {
-  margin-bottom: 32px;
-}
-
-.sessions-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.sessions-header h3 {
-  font-size: 1.125rem;
-  font-weight: 300;
-  color: #111827;
-  margin: 0;
-}
-
-#session-count {
-  font-size: 0.875rem;
-  color: #6b7280;
+  text-align: center;
 }
 
 .session-items {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  justify-content: center;
+  gap: 12px;
   margin-bottom: 32px;
   flex-wrap: wrap;
 }
 
 .session-item {
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid #d1d5db;
+  border: 2px solid #e5e7eb;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
   color: #9ca3af;
+  background-color: #ffffff;
 }
 
 .session-item.completed {
@@ -175,37 +79,29 @@ body {
 }
 
 .session-item.failed {
-  border-color: #f87171;
-  background-color: #fef2f2;
-  color: #f87171;
+  border-color: #ef4444;
+  background-color: #ef4444;
+  color: #ffffff;
 }
 
 .session-item .status-icon {
   position: absolute;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
-.session-item.completed .status-icon {
-  color: #ffffff;
-}
-
-.session-item.failed .status-icon {
-  color: #f87171;
-}
-
 .remove-icon {
   position: absolute;
-  top: -4px;
-  right: -4px;
-  background-color: #f87171;
+  top: -6px;
+  right: -6px;
+  background-color: #ef4444;
   color: #ffffff;
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -220,16 +116,13 @@ body {
 }
 
 .progress-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .progress-circle {
-  position: relative;
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 16px;
 }
 
 .progress-circle svg {
@@ -241,24 +134,31 @@ body {
 }
 
 .progress-percentage {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 300;
   color: #111827;
+  margin-bottom: 8px;
+}
+
+.session-count {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin-bottom: 24px;
 }
 
 #add-session-btn {
   background: none;
-  border: none;
+  border: 1px solid #e5e7eb;
   color: #6b7280;
   font-size: 0.875rem;
-  font-weight: 300;
-  border-bottom: 1px solid #e5e7eb;
+  font-weight: 400;
   cursor: pointer;
   transition: all 0.2s;
-  padding-bottom: 4px;
+  padding: 8px 16px;
+  border-radius: 6px;
 }
 
 #add-session-btn:hover {
   color: #374151;
-  border-bottom-color: #9ca3af;
+  border-color: #9ca3af;
 }
